@@ -5,7 +5,6 @@ var setPrototypeOf = require('es5-ext/object/set-prototype-of')
   , Map            = require('es6-map')
   , d              = require('d/d')
   , memoize        = require('memoizee/lib/regular')
-  , emitBatch      = require('observable-set/_emit-batch')
   , SetsSet        = require('./_sets-set')
   , multiSetSymbol = require('./symbol')
 
@@ -41,22 +40,17 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 	MultiSet.prototype = create(BaseSet.prototype, {
 		constructor: d(MultiSet),
 		_onSetAdd: d(function (set) {
-			var added, event, listener;
-			added = [];
+			var listener;
+			this.__onHold__ = true;
 			set.forEach(function (value) {
 				var count = (this.__map__.get(value) || 0) + 1;
 				this.__map__.set(value, count);
 				if (count > 1) return;
-				added.push(value);
-				this.$add(value);
+				this._add(value);
 			}, this);
 			set.on('change', listener = this._onChange.bind(this, set));
 			this.__listeners__.set(set, listener);
-			if (added.length) {
-				if (added.length === 1) event = { type: 'add', value: added[0] };
-				else event = { type: 'batch', added: added };
-				this.emit('change', event);
-			}
+			this._release_();
 			return this;
 		}),
 		_onSetsClear: d(function (sets) {
@@ -68,29 +62,23 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 			this._clear();
 		}),
 		_onSetDelete: d(function (set) {
-			var deleted, event;
-			deleted = [];
+			this.__onHold__ = true;
 			set.forEach(function (value) {
 				var count = this.__map__.get(value) - 1;
 				if (count) {
 					this.__map__.set(value, count);
 					return;
 				}
-				deleted.push(value);
 				this.__map__.delete(value);
-				this.$delete(value);
+				this._delete(value);
 			}, this);
 			set.off('change', this.__listeners__.get(set));
 			this.__listeners__.delete(set);
-			if (deleted.length) {
-				if (deleted.length === 1) event = { type: 'delete', value: deleted[0] };
-				else event = { type: 'batch', deleted: deleted };
-				this.emit('change', event);
-			}
+			this._release_();
 			return true;
 		}),
 		_onChange: d(function (current, event) {
-			var type = event.type, count, deleted, added;
+			var type = event.type, count;
 			if (type === 'add') {
 				count = (this.__map__.get(event.value) || 0) + 1;
 				this.__map__.set(event.value, count);
@@ -108,13 +96,14 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 				this._delete(event.value);
 				return;
 			}
+			this.__onHold__ = true;
 			if (type === 'clear') {
 				if (this.__sets__.size === 1) {
 					this.__map__.clear();
+					this._release_();
 					this._clear();
 					return;
 				}
-				deleted = [];
 				this.__map__.forEach(function (count, value) {
 					forOf(this.__sets__, function (set, doBreak) {
 						if (set === current) return;
@@ -127,34 +116,19 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 						this.__map__.set(value, count);
 						return;
 					}
-					deleted.push(value);
 					this.__map__.delete(value);
-					this.$delete(value);
+					this._delete(value);
 				}, this);
-				if (!deleted.length) return;
-				if (!this.size) {
-					event = { type: 'clear' };
-				} else if (deleted.length === 1) {
-					event = { type: 'delete', value: deleted[0] };
-				} else {
-					event = { type: 'batch', deleted: deleted };
-				}
-				this.emit('change', event);
-				return;
-			}
-			if (type === 'batch') {
+			} else if (type === 'batch') {
 				if (event.added) {
-					added = [];
 					event.added.forEach(function (value) {
 						var count = (this.__map__.get(value) || 0) + 1;
 						this.__map__.set(value, count);
 						if (count > 1) return;
-						this.$add(value);
-						added.push(value);
+						this._add(value);
 					}, this);
 				}
 				if (event.deleted) {
-					deleted = [];
 					event.deleted.forEach(function (value) {
 						var count = this.__map__.get(value) - 1;
 						if (count) {
@@ -162,12 +136,10 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 							return;
 						}
 						this.__map__.delete(value);
-						this.$delete(value);
-						deleted.push(value);
+						this._delete(value);
 					}, this);
 				}
 			} else {
-				deleted = [];
 				this.__map__.forEach(function (count, value) {
 					var nu = 0;
 					forOf(this.__sets__, function (set, doBreak) {
@@ -179,19 +151,16 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 						this.__map__.set(value, nu);
 						return;
 					}
-					deleted.push(value);
 					this.__map__.delete(value);
-					this.$delete(value);
+					this._delete(value);
 				}, this);
-				added = [];
 				current.forEach(function (value) {
 					if (this.has(value)) return;
 					this.__map__.set(value, 1);
-					this.$add(value);
-					added.push(value);
+					this._add(value);
 				}, this);
 			}
-			emitBatch(this, added, deleted);
+			this._release_();
 		})
 	});
 	defineProperty(MultiSet.prototype, multiSetSymbol, d('', true));
