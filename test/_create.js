@@ -39,12 +39,14 @@ exports.tests = function (MultiSet, a) {
 
 	a.h1("Delete set #2");
 	set.sets.delete(s1);
+	event.deleted = toArray(event.deleted);
 	a.deep(event, { type: 'batch', deleted: ['dwa', 'trzy'] }, "Event");
 	a.deep(toArray(set), ['raz', 'pięć', 'dziewięć', 'osiem'], "Content");
 	event = null;
 
 	a.h1("Re-add set");
 	set.sets.add(s2);
+	event.added = toArray(event.added);
 	a.deep(event, { type: 'batch', added: ['dwa', 'sześć'] }, "Event");
 	a.deep(toArray(set), ['raz', 'pięć', 'dziewięć', 'osiem', 'dwa', 'sześć'],
 		"Content");
