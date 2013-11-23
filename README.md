@@ -22,19 +22,19 @@ mset;      // { 'raz', 'dwa', 'trzy' }
 
 mset.on('change', function (event) {
   if (event.type === 'add') console.log("Added:", event.value);
-  else if (event.type === 'delete') console.log(Deleted:", event.value);
+  else if (event.type === 'delete') console.log("Deleted:", event.value);
   else if (event.type === 'clear') console.log("Set cleared");
   else if (event.type === 'batch') console.log("Batch change: Added: " + event.added ", Deleted: " + event.deleted);
 });
 
-set1.add('cztery');   // Added: trzy
+set1.add('cztery'); // Added: trzy
 set2.add('pięć');   // Added: pięć
-set2.add('dwa'); // (ignored)
+set2.add('dwa');    // (ignored)
 set1.delete('raz'); // (ignored)
 set2.delete('raz'); // Deleted: 'raz'
 
 mset.sets.add(new Set(['cztery', 'siedem', 'osiem'])); // Batch: Added: ['siedem, 'osiem' ]
-mset.sets.delete(set2); // Batch: Deleted: ['trzy', 'pięć']
+mset.sets.delete(set2);                                // Batch: Deleted: ['trzy', 'pięć']
 
 try {
   mset.add('other value'); // throws
