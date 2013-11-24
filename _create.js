@@ -41,7 +41,7 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 		constructor: d(MultiSet),
 		_onSetAdd: d(function (set) {
 			var listener;
-			this.__onHold__ = true;
+			this._hold_ += 1;
 			set.forEach(function (value) {
 				var count = (this.__map__.get(value) || 0) + 1;
 				this.__map__.set(value, count);
@@ -50,7 +50,7 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 			}, this);
 			set.on('change', listener = this._onChange.bind(this, set));
 			this.__listeners__.set(set, listener);
-			this._release_();
+			this._hold_ -= 1;
 			return this;
 		}),
 		_onSetsClear: d(function (sets) {
@@ -62,7 +62,7 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 			this._clear();
 		}),
 		_onSetDelete: d(function (set) {
-			this.__onHold__ = true;
+			this._hold_ += 1;
 			set.forEach(function (value) {
 				var count = this.__map__.get(value) - 1;
 				if (count) {
@@ -74,7 +74,7 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 			}, this);
 			set.off('change', this.__listeners__.get(set));
 			this.__listeners__.delete(set);
-			this._release_();
+			this._hold_ -= 1;
 			return true;
 		}),
 		_onChange: d(function (current, event) {
@@ -96,11 +96,11 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 				this._delete(event.value);
 				return;
 			}
-			this.__onHold__ = true;
+			this._hold_ += 1;
 			if (type === 'clear') {
 				if (this.__sets__.size === 1) {
 					this.__map__.clear();
-					this._release_();
+					this._hold_ -= 1;
 					this._clear();
 					return;
 				}
@@ -160,7 +160,7 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 					this._add(value);
 				}, this);
 			}
-			this._release_();
+			this._hold_ -= 1;
 		})
 	});
 	defineProperty(MultiSet.prototype, multiSetSymbol, d('', true));
