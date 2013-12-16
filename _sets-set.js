@@ -14,7 +14,7 @@ var setPrototypeOf     = require('es5-ext/object/set-prototype-of')
 
 module.exports = SetsSet = function (multiSet, iterable) {
 	var sets;
-	if (iterable !== undefined) {
+	if (iterable != null) {
 		iterator(iterable);
 		sets = [];
 		forOf(iterable, function (value) {
