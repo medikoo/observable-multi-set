@@ -5,7 +5,7 @@ var setPrototypeOf     = require('es5-ext/object/set-prototype-of')
   , forOf              = require('es6-iterator/for-of')
   , toArray            = require('es6-iterator/to-array')
   , Set                = require('es6-set')
-  , d                  = require('d/d')
+  , d                  = require('d')
   , validObservableSet = require('observable-set/valid-observable-set')
 
   , defineProperty = Object.defineProperty, add = Set.prototype.add

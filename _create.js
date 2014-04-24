@@ -3,7 +3,7 @@
 var setPrototypeOf = require('es5-ext/object/set-prototype-of')
   , forOf          = require('es6-iterator/for-of')
   , Map            = require('es6-map')
-  , d              = require('d/d')
+  , d              = require('d')
   , memoize        = require('memoizee/lib/regular')
   , SetsSet        = require('./_sets-set')
   , multiSetSymbol = require('./symbol')
