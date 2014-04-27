@@ -4,7 +4,7 @@ var setPrototypeOf = require('es5-ext/object/set-prototype-of')
   , forOf          = require('es6-iterator/for-of')
   , Map            = require('es6-map')
   , d              = require('d')
-  , memoize        = require('memoizee/lib/regular')
+  , memoize        = require('memoizee/plain')
   , SetsSet        = require('./_sets-set')
   , multiSetSymbol = require('./symbol')
 
@@ -166,4 +166,4 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 	defineProperty(MultiSet.prototype, multiSetSymbol, d('', true));
 
 	return MultiSet;
-}, { length: 1 });
+}, { normalizer: require('memoizee/normalizers/get-1')() });
