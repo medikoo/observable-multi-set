@@ -3,7 +3,7 @@
 var setPrototypeOf     = require('es5-ext/object/set-prototype-of')
   , iterator           = require('es6-iterator/valid-iterable')
   , forOf              = require('es6-iterator/for-of')
-  , toArray            = require('es6-iterator/to-array')
+  , toArray            = require('es5-ext/array/to-array')
   , Set                = require('es6-set')
   , d                  = require('d')
   , validObservableSet = require('observable-set/valid-observable-set')
