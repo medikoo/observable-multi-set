@@ -9,6 +9,12 @@ Sets can be added and removed during runtime, appropriate events propagation is 
 
 Check [es6-set](https://github.com/medikoo/es6-set) for appropriate shim for ES5 world
 
+### Installation
+
+	$ npm install observable-multi-set
+
+To port it to Browser or any other (non CJS) environment, use your favorite CJS bundler. No favorite yet? Try: [Browserify](http://browserify.org/), [Webmake](https://github.com/medikoo/modules-webmake) or [Webpack](http://webpack.github.io/)
+
 ### Usage
 
 ```javascript
@@ -42,17 +48,6 @@ try {
   console.log("Multi set is read only");
 }
 ```
-
-### Installation
-#### NPM
-
-In your project path:
-
-	$ npm install observable-multi-set
-
-##### Browser
-
-You can easily bundle _observable-multi-set_ for browser with [modules-webmake](https://github.com/medikoo/modules-webmake)
 
 ## Tests [![Build Status](https://travis-ci.org/medikoo/observable-multi-set.png)](https://travis-ci.org/medikoo/observable-multi-set)
 
