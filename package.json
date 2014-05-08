@@ -1,6 +1,6 @@
 {
   "name": "observable-multi-set",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Configure observable multi set collections",
   "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
   "keywords": [
@@ -21,17 +21,17 @@
   },
   "dependencies": {
     "d": "~0.1.1",
-    "es5-ext": "~0.10.2",
+    "es5-ext": "~0.10.4",
     "es6-iterator": "~0.1.1",
     "es6-map": "0.1.x",
     "es6-set": "0.1.x",
     "es6-symbol": "0.1.x",
-    "memoizee": "~0.3.1",
-    "observable-set": "0.0.1"
+    "memoizee": "~0.3.2",
+    "observable-set": "0.0.2"
   },
   "devDependencies": {
     "event-emitter": "~0.3.1",
-    "observable-value": "0.0.1",
+    "observable-value": "0.0.2",
     "tad": "0.2.x"
   },
   "scripts": {
