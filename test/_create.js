@@ -25,14 +25,14 @@ exports.tests = function (MultiSet, a) {
 		"Content");
 	a.h1("Add set");
 	set.sets.add(s3);
-	a.deep(event, { type: 'add', value: 'osiem' }, "Event");
+	a.deep(event, { target: set, type: 'add', value: 'osiem' }, "Event");
 	a.deep(toArray(set), ['raz', 'dwa', 'trzy', 'pięć', 'dziewięć', 'sześć',
 		'osiem'], "Content");
 	event = null;
 
 	a.h1("Delete set");
 	set.sets.delete(s2);
-	a.deep(event, { type: 'delete', value: 'sześć' }, "Event");
+	a.deep(event, { target: set, type: 'delete', value: 'sześć' }, "Event");
 	a.deep(toArray(set), ['raz', 'dwa', 'trzy', 'pięć', 'dziewięć', 'osiem'],
 		"Content");
 	event = null;
@@ -40,28 +40,28 @@ exports.tests = function (MultiSet, a) {
 	a.h1("Delete set #2");
 	set.sets.delete(s1);
 	event.deleted = toArray(event.deleted);
-	a.deep(event, { type: 'batch', deleted: ['dwa', 'trzy'] }, "Event");
+	a.deep(event, { target: set, type: 'batch', deleted: ['dwa', 'trzy'] }, "Event");
 	a.deep(toArray(set), ['raz', 'pięć', 'dziewięć', 'osiem'], "Content");
 	event = null;
 
 	a.h1("Re-add set");
 	set.sets.add(s2);
 	event.added = toArray(event.added);
-	a.deep(event, { type: 'batch', added: ['dwa', 'sześć'] }, "Event");
+	a.deep(event, { target: set, type: 'batch', added: ['dwa', 'sześć'] }, "Event");
 	a.deep(toArray(set), ['raz', 'pięć', 'dziewięć', 'osiem', 'dwa', 'sześć'],
 		"Content");
 	event = null;
 
 	a.h1("Re-add set #2");
 	set.sets.add(s1);
-	a.deep(event, { type: 'add', value: 'trzy' }, "Event");
+	a.deep(event, { target: set, type: 'add', value: 'trzy' }, "Event");
 	a.deep(toArray(set), ['raz', 'pięć', 'dziewięć', 'osiem', 'dwa', 'sześć',
 		'trzy'], "Content");
 	event = null;
 
 	a.h1("Add value");
 	s1.add('dziesięć');
-	a.deep(event, { type: 'add', value: 'dziesięć' }, "Event");
+	a.deep(event, { target: set, type: 'add', value: 'dziesięć' }, "Event");
 	a.deep(toArray(set), ['raz', 'pięć', 'dziewięć', 'osiem', 'dwa', 'sześć',
 		'trzy', 'dziesięć'], "Content");
 	event = null;
@@ -89,14 +89,14 @@ exports.tests = function (MultiSet, a) {
 
 	a.h1("Final value delete");
 	s2.delete('pięć');
-	a.deep(event, { type: 'delete', value: 'pięć' }, "Event");
+	a.deep(event, { target: set, type: 'delete', value: 'pięć' }, "Event");
 	a.deep(toArray(set), ['raz', 'dziewięć', 'osiem', 'dwa', 'sześć', 'trzy',
 		'dziesięć'], "Content");
 	event = null;
 
 	a.h1("Lone value delete");
 	s3.delete('osiem');
-	a.deep(event, { type: 'delete', value: 'osiem' }, "Event");
+	a.deep(event, { target: set, type: 'delete', value: 'osiem' }, "Event");
 	a.deep(toArray(set), ['raz', 'dziewięć', 'dwa', 'sześć', 'trzy', 'dziesięć'],
 		"Content");
 	event = null;
