@@ -14,7 +14,7 @@ var setPrototypeOf = require('es5-ext/object/set-prototype-of')
 module.exports = memoize(function (BaseSet, BaseMap) {
 	var MultiSet = function (/*iterable, comparator*/) {
 		var iterable = arguments[0], comparator = arguments[1], sets;
-		if (!(this instanceof MultiSet)) return new MultiSet(iterable, comparator);
+		if (!(this instanceof MultiSet)) throw new TypeError('Constructor requires \'new\'');
 		sets = new SetsSet(this, iterable);
 		BaseSet.call(this, undefined, comparator);
 		defineProperties(this, {
