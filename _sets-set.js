@@ -14,6 +14,7 @@ var setPrototypeOf     = require('es5-ext/object/set-prototype-of')
 
 module.exports = SetsSet = function (multiSet, iterable) {
 	var sets;
+	if (!(this instanceof SetsSet)) throw new TypeError('Constructor requires \'new\'');
 	if (iterable != null) {
 		iterator(iterable);
 		sets = [];
