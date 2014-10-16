@@ -1,6 +1,7 @@
 'use strict';
 
 var setPrototypeOf     = require('es5-ext/object/set-prototype-of')
+  , mixin              = require('es5-ext/object/mixin-prototypes')
   , iterator           = require('es6-iterator/valid-iterable')
   , forOf              = require('es6-iterator/for-of')
   , toArray            = require('es5-ext/array/to-array')
@@ -8,12 +9,12 @@ var setPrototypeOf     = require('es5-ext/object/set-prototype-of')
   , d                  = require('d')
   , validObservableSet = require('observable-set/valid-observable-set')
 
-  , defineProperty = Object.defineProperty, add = Set.prototype.add
-  , clear = Set.prototype.clear, del = Set.prototype.delete
+  , defineProperty = Object.defineProperty, getPrototypeOf = Object.getPrototypeOf
+  , add = Set.prototype.add, clear = Set.prototype.clear, del = Set.prototype.delete
   , SetsSet;
 
 module.exports = SetsSet = function (multiSet, iterable) {
-	var sets;
+	var sets, set;
 	if (!(this instanceof SetsSet)) throw new TypeError('Constructor requires \'new\'');
 	if (iterable != null) {
 		iterator(iterable);
@@ -22,8 +23,11 @@ module.exports = SetsSet = function (multiSet, iterable) {
 			sets.push(validObservableSet(value));
 		});
 	}
-	Set.call(this, sets);
-	defineProperty(this, '__master__', d('', multiSet));
+	set = new Set(sets);
+	if (setPrototypeOf) setPrototypeOf(set, getPrototypeOf(this));
+	else mixin(set, getPrototypeOf(this));
+	defineProperty(set, '__master__', d('', multiSet));
+	return set;
 };
 if (setPrototypeOf) setPrototypeOf(SetsSet, Set);
 

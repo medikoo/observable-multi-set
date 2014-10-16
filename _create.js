@@ -1,6 +1,7 @@
 'use strict';
 
 var setPrototypeOf = require('es5-ext/object/set-prototype-of')
+  , mixin          = require('es5-ext/object/mixin-prototypes')
   , forOf          = require('es6-iterator/for-of')
   , Map            = require('es6-map')
   , d              = require('d')
@@ -9,15 +10,17 @@ var setPrototypeOf = require('es5-ext/object/set-prototype-of')
   , multiSetSymbol = require('./symbol')
 
   , create = Object.create, defineProperties = Object.defineProperties
-  , defineProperty = Object.defineProperty;
+  , defineProperty = Object.defineProperty, getPrototypeOf = Object.getPrototypeOf;
 
 module.exports = memoize(function (BaseSet, BaseMap) {
 	var MultiSet = function (/*iterable, comparator*/) {
-		var iterable = arguments[0], comparator = arguments[1], sets;
+		var iterable = arguments[0], comparator = arguments[1], sets, self;
 		if (!(this instanceof MultiSet)) throw new TypeError('Constructor requires \'new\'');
-		sets = new SetsSet(this, iterable);
-		BaseSet.call(this, undefined, comparator);
-		defineProperties(this, {
+		self = new BaseSet(undefined, comparator);
+		if (setPrototypeOf) setPrototypeOf(self, getPrototypeOf(this));
+		else mixin(self, getPrototypeOf(this));
+		sets = new SetsSet(self, iterable);
+		defineProperties(self, {
 			__map__: d(new BaseMap(undefined, comparator)),
 			sets: d('', sets),
 			__listeners__: d(new Map())
@@ -26,14 +29,15 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 		sets.forEach(function (set) {
 			var listener;
 			set.forEach(function (value) {
-				var count = (this.__map__.get(value) || 0) + 1;
-				this.__map__.set(value, count);
+				var count = (self.__map__.get(value) || 0) + 1;
+				self.__map__.set(value, count);
 				if (count > 1) return;
-				this.$add(value);
-			}, this);
-			set.on('change', listener = this._onChange.bind(this, set));
-			this.__listeners__.set(set, listener);
-		}, this);
+				self.$add(value);
+			});
+			set.on('change', listener = self._onChange.bind(self, set));
+			self.__listeners__.set(set, listener);
+		});
+		return self;
 	};
 	if (setPrototypeOf) setPrototypeOf(MultiSet, BaseSet);
 
