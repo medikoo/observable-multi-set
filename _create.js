@@ -25,7 +25,7 @@ module.exports = memoize(function (BaseSet, BaseMap) {
 			sets: d('', sets),
 			__listeners__: d(new Map())
 		});
-		if (!sets.size) return;
+		if (!sets.size) return self;
 		sets.forEach(function (set) {
 			var listener;
 			set.forEach(function (value) {

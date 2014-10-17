@@ -100,4 +100,9 @@ exports.tests = function (MultiSet, a) {
 	a.deep(toArray(set), ['raz', 'dziewięć', 'dwa', 'sześć', 'trzy', 'dziesięć'],
 		"Content");
 	event = null;
+
+	a.h1("Empty construction");
+	set = new MultiSet();
+	set.sets.add(s1);
+	a(set.size, 5);
 };
