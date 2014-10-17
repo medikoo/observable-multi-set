@@ -27,7 +27,7 @@
     "es6-set": "git://github.com/medikoo/es6-set.git",
     "es6-symbol": "0.1.x",
     "memoizee": "~0.3.2",
-    "observable-set": "0.0.2"
+    "observable-set": "git://github.com/medikoo/observable-set.git"
   },
   "devDependencies": {
     "event-emitter": "~0.3.1",
