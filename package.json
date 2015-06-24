@@ -25,13 +25,13 @@
     "es6-iterator": "~0.1.1",
     "es6-map": "git://github.com/medikoo/es6-map.git",
     "es6-set": "git://github.com/medikoo/es6-set.git",
-    "es6-symbol": "0.1.x",
+    "es6-symbol": "~2.0.1",
     "memoizee": "~0.3.2",
     "observable-set": "git://github.com/medikoo/observable-set.git"
   },
   "devDependencies": {
     "event-emitter": "~0.3.1",
-    "observable-value": "0.0.2",
+    "observable-value": "0.0.3",
     "tad": "0.2.x"
   },
   "scripts": {
