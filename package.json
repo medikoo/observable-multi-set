@@ -1,6 +1,6 @@
 {
   "name": "observable-multi-set",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Configure observable multi set collections",
   "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
   "keywords": [
